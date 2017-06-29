@@ -8,6 +8,9 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by rocky-po on 28.06.17.
  */
@@ -60,14 +63,39 @@ public class ProductList {
 
     public void clickFilterOkButton(){
         filterOkButton.click();
-    }
-
-    public String rememberFirstProductName() {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e){
             System.out.println("Упали при ожидании");
         }
+    }
+
+    public void checkManufacturer(String manufacturer){
+        for (WebElement product : productList) {
+            assertTrue(product.findElement(By.xpath("./a[3]/h4")).getText()
+                    .contains(manufacturer));
+        }
+    }
+
+    public void checkPrice(String price){
+        for (WebElement product: productList) {
+            int lowProductPrice = Integer.parseInt(product
+                    .findElement(By.xpath("./div[3]/div[1]/span")).getText()
+                    .replaceAll(" ", "").replace("руб.", ""));
+            int highProductPrice = Integer.parseInt(product
+                    .findElement(By.xpath("./div[3]/div[2]/span")).getText()
+                    .replaceAll(" ", "").replace("руб.", ""));
+            int expectedPrice = Integer.parseInt(price);
+            if (expectedPrice < lowProductPrice || expectedPrice > highProductPrice){
+                Assert.fail("Фильтрация прошла плохо, фильтруемой цены нет в диапазоне цен" +
+                        "ожидаемая цена - " + expectedPrice +
+                        "нижняя действительная цена - " + lowProductPrice +
+                        "верхняя действительная цена - " + highProductPrice);
+            }
+        }
+    }
+
+    public String rememberFirstProductName() {
         WebElement firstElement = productList.get(0);
         return firstElement.findElement(By.xpath("./a[3]/h4")).getText();
     }

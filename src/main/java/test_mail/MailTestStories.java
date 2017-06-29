@@ -37,7 +37,8 @@ import static org.jbehave.core.reporters.Format.XML_TEMPLATE;
  * {@link Embeddable} class to run multiple textual stories via JUnit.
  * </p>
  * <p>
- * Stories are specified in classpath and correspondingly the {@link LoadFromClasspath} story loader is configured.
+ * Stories are specified in classpath and correspondingly the {@link LoadFromClasspath}
+ * story loader is configured.
  * </p> 
  */
 @RunWith(JUnitReportingRunner.class)
@@ -57,12 +58,13 @@ public class MailTestStories extends JUnitStories {
         Properties viewResources = new Properties();
         viewResources.put("decorateNonHtml", "true");
         viewResources.put("reports", "ftl/jbehave-reports-with-totals.ftl");
-        // Start from default ParameterConverters instance
         ParameterConverters parameterConverters = new ParameterConverters();
-        // factory to allow parameter conversion and loading from external resources (used by StoryParser too)
-        ExamplesTableFactory examplesTableFactory = new ExamplesTableFactory(new LocalizedKeywords(), new LoadFromClasspath(embeddableClass), parameterConverters, new TableTransformers());
-        // add custom converters
-        parameterConverters.addConverters(new DateConverter(new SimpleDateFormat("yyyy-MM-dd")),
+        ExamplesTableFactory examplesTableFactory =
+                new ExamplesTableFactory(new LocalizedKeywords(),
+                        new LoadFromClasspath(embeddableClass), parameterConverters,
+                        new TableTransformers());
+        parameterConverters.addConverters(new DateConverter(
+                new SimpleDateFormat("yyyy-MM-dd")),
                 new ExamplesTableConverter(examplesTableFactory));
         return new MostUsefulConfiguration()
                 .useStoryLoader(new LoadFromClasspath(embeddableClass))
@@ -72,14 +74,11 @@ public class MailTestStories extends JUnitStories {
                         .withDefaultFormats()
                         .withViewResources(viewResources)
                         .withFormats(CONSOLE, TXT, HTML_TEMPLATE, XML_TEMPLATE)
-
                         .withFailureTrace(true)
                         .withFailureTraceCompression(true)
                         .withCrossReference(xref))
                 .useParameterConverters(parameterConverters)
-                // use '%' instead of '$' to identify parameters
-                .useStepPatternParser(new RegexPrefixCapturingPatternParser(
-                        "%"))
+                .useStepPatternParser(new RegexPrefixCapturingPatternParser("%"))
                 .useStepMonitor(xref.getStepMonitor())
                 .useStoryReporterBuilder(new StoryReporterBuilder()
                         .withReporters(new AllureReporter()));
@@ -94,7 +93,5 @@ public class MailTestStories extends JUnitStories {
     protected List<String> storyPaths() {
         return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()),
                 "**/*.story", "**/excluded*.story");
-
     }
-
 }

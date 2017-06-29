@@ -8,7 +8,10 @@ And I input low <lowPrice> I will search
 And I input high <highPrice> I will search
 And I choice <manufacture>
 And I click on apply button
-And I remember the first element
+Then I have only <manufacture> pruducts
+And I have <lowPrice> in range
+And I have <highPrice> in range
+When I remember the first element
 And I go to view this product
 Then I see that name this product equals remember name
 

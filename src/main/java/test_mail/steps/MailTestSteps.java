@@ -1,7 +1,6 @@
 package test_mail.steps;
 
 import org.jbehave.core.annotations.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -27,11 +26,6 @@ public class MailTestSteps {
         capabilities.setCapability("marionette", true);
         driver = new ChromeDriver();
         initPages();
-    }
-
-    @BeforeStory
-    public void beforeStory() {
-        System.out.println("первая история");
     }
 
     @Given("I am on yandex page")
@@ -83,6 +77,24 @@ public class MailTestSteps {
         productListPage.clickFilterOkButton();
     }
 
+    @Then("I have only <manufacture> pruducts")
+    @Step("I have only <manufacture> pruducts")
+    public void checkFilterManufacturer(@Named("manufacture") String manufacturer){
+        productListPage.checkManufacturer(manufacturer);
+    }
+
+    @Then("I have <lowPrice> in range")
+    @Step("I have <lowPrice> in range")
+    public void checkFilterLowPrice(@Named("lowPrice") String lowPrice){
+        productListPage.checkPrice(lowPrice);
+    }
+
+    @Then("I have <highPrice> in range")
+    @Step("I have <highPrice> in range")
+    public void checkFilterHighPrice(@Named("highPrice") String highPrice){
+        productListPage.checkPrice(highPrice);
+    }
+
     @When("I remember the first element")
     @Step("I remember the first element")
     public void rememberNameFirstElement(){
@@ -101,14 +113,9 @@ public class MailTestSteps {
         productViewPage.checkCorrectTitleProduct(productName);
     }
 
-    @AfterStory(uponGivenStory = true)
-    public void afterStory() {
-        driver.close();
-    }
-
     @AfterStories
     public void afterStories() {
-        System.out.println("А завершение интересно работает?");
+        driver.close();
         driver.quit();
     }
 
@@ -118,6 +125,5 @@ public class MailTestSteps {
         electronicPage = PageFactory.initElements(driver, Electronic.class);
         productListPage = PageFactory.initElements(driver, ProductList.class);
         productViewPage = PageFactory.initElements(driver, ProductView.class);
-        System.out.println("Страницы проинициализировали - " + homePage);
     }
 }
