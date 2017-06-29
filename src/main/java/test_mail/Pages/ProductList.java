@@ -8,7 +8,6 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -77,20 +76,30 @@ public class ProductList {
         }
     }
 
-    public void checkPrice(String price){
+    public void checkLowPrice(String price){
+        if ("".equals(price))
+            return;
+        int expectedPrice = Integer.parseInt(price);
+        String divNumber = "2";
         for (WebElement product: productList) {
-            int lowProductPrice = Integer.parseInt(product
-                    .findElement(By.xpath("./div[3]/div[1]/span")).getText()
-                    .replaceAll(" ", "").replace("руб.", ""));
-            int highProductPrice = Integer.parseInt(product
-                    .findElement(By.xpath("./div[3]/div[2]/span")).getText()
-                    .replaceAll(" ", "").replace("руб.", ""));
-            int expectedPrice = Integer.parseInt(price);
-            if (expectedPrice < lowProductPrice || expectedPrice > highProductPrice){
+            if (expectedPrice > convertPriceInNumber(product, divNumber)){
                 Assert.fail("Фильтрация прошла плохо, фильтруемой цены нет в диапазоне цен" +
                         "ожидаемая цена - " + expectedPrice +
-                        "нижняя действительная цена - " + lowProductPrice +
-                        "верхняя действительная цена - " + highProductPrice);
+                        "верхняя действительная цена - " + convertPriceInNumber(product, divNumber));
+            }
+        }
+    }
+
+    public void checkHighPrice(String price){
+        if ("".equals(price))
+            return;
+        int expectedPrice = Integer.parseInt(price);
+        String divNumber = "1";
+        for (WebElement product: productList) {
+            if (expectedPrice < convertPriceInNumber(product, divNumber)){
+                Assert.fail("Фильтрация прошла плохо, фильтруемой цены нет в диапазоне цен" +
+                        "ожидаемая цена - " + expectedPrice +
+                        "нижняя действительная цена - " + convertPriceInNumber(product, divNumber));
             }
         }
     }
@@ -102,5 +111,11 @@ public class ProductList {
 
     public void goToViewFirstProduct(){
         productList.get(0).findElement(By.xpath("./a[2]")).click();
+    }
+
+    private int convertPriceInNumber(WebElement product, String divNumber){
+        return Integer.parseInt(product
+                .findElement(By.xpath("./div[3]/div[" + divNumber + "]/span")).getText()
+                .replaceAll(" ", "").replace("руб.", ""));
     }
 }

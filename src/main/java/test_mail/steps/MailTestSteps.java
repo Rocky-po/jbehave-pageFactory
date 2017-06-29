@@ -86,13 +86,13 @@ public class MailTestSteps {
     @Then("I have <lowPrice> in range")
     @Step("I have <lowPrice> in range")
     public void checkFilterLowPrice(@Named("lowPrice") String lowPrice){
-        productListPage.checkPrice(lowPrice);
+        productListPage.checkLowPrice(lowPrice);
     }
 
     @Then("I have <highPrice> in range")
     @Step("I have <highPrice> in range")
     public void checkFilterHighPrice(@Named("highPrice") String highPrice){
-        productListPage.checkPrice(highPrice);
+        productListPage.checkHighPrice(highPrice);
     }
 
     @When("I remember the first element")
