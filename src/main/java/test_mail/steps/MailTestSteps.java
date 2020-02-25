@@ -3,6 +3,8 @@ package test_mail.steps;
 import org.jbehave.core.annotations.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.PageFactory;
 import ru.yandex.qatools.allure.annotations.Step;
@@ -21,10 +23,11 @@ public class MailTestSteps {
 
     @BeforeStories
     public void beforeStories() {
-        System.setProperty("webdriver.chrome.driver", "./chromedriver");
-        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+        System.setProperty("webdriver.chrome.driver", "./geckodriver");
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability(CapabilityType.BROWSER_NAME, "firefox");
         capabilities.setCapability("marionette", true);
-        driver = new ChromeDriver();
+        driver = new FirefoxDriver();
         initPages();
     }
 

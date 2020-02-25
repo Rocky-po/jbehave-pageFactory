@@ -2,6 +2,7 @@ package test_mail;
 
 import org.jbehave.core.model.*;
 import org.jbehave.core.reporters.StoryReporter;
+import org.jbehave.core.steps.StepCollector;
 import ru.yandex.qatools.allure.Allure;
 import ru.yandex.qatools.allure.config.AllureModelUtils;
 import ru.yandex.qatools.allure.events.*;
@@ -67,7 +68,32 @@ public class AllureReporter implements StoryReporter {
     }
 
     @Override
+    public void beforeStorySteps(StepCollector.Stage stage) {
+
+    }
+
+    @Override
+    public void afterStorySteps(StepCollector.Stage stage) {
+
+    }
+
+    @Override
+    public void beforeScenarioSteps(StepCollector.Stage stage) {
+
+    }
+
+    @Override
+    public void afterScenarioSteps(StepCollector.Stage stage) {
+
+    }
+
+    @Override
     public void scenarioNotAllowed(Scenario scenario, String filter) {
+
+    }
+
+    @Override
+    public void beforeScenario(Scenario scenario) {
 
     }
 
@@ -102,12 +128,22 @@ public class AllureReporter implements StoryReporter {
     }
 
     @Override
+    public void beforeGivenStories() {
+
+    }
+
+    @Override
     public void givenStories(GivenStories givenStories) {
 
     }
 
     @Override
     public void givenStories(List<String> storyPaths) {
+
+    }
+
+    @Override
+    public void afterGivenStories() {
 
     }
 
@@ -137,6 +173,11 @@ public class AllureReporter implements StoryReporter {
             getLifecycle().fire(event);
         }
         withExamples = false;
+    }
+
+    @Override
+    public void example(Map<String, String> tableRow, int exampleIndex) {
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package test_mail;
 
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
@@ -18,20 +19,22 @@ import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
 import org.jbehave.core.parsers.RegexStoryParser;
 import org.jbehave.core.reporters.CrossReference;
+import org.jbehave.core.reporters.Format;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
+import org.jbehave.core.steps.ParameterControls;
 import org.jbehave.core.steps.ParameterConverters;
-import org.jbehave.core.steps.ParameterConverters.DateConverter;
 import org.jbehave.core.steps.ParameterConverters.ExamplesTableConverter;
 import org.junit.runner.RunWith;
 import test_mail.steps.MailTestSteps;
 
+import static java.util.Arrays.asList;
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
-import static org.jbehave.core.reporters.Format.CONSOLE;
 import static org.jbehave.core.reporters.Format.HTML_TEMPLATE;
-import static org.jbehave.core.reporters.Format.TXT;
 import static org.jbehave.core.reporters.Format.XML_TEMPLATE;
+import static org.jbehave.core.reporters.StoryReporterBuilder.Format.*;
+
 /**
  * <p>
  * {@link Embeddable} class to run multiple textual stories via JUnit.
@@ -49,7 +52,7 @@ public class MailTestStories extends JUnitStories {
     public MailTestStories() {
         configuredEmbedder().embedderControls().doGenerateViewAfterStories(true)
                 .doIgnoreFailureInStories(false).doIgnoreFailureInView(true)
-                .doVerboseFailures(true).useThreads(1).useStoryTimeoutInSecs(60);
+                .doVerboseFailures(true).useThreads(1).useStoryTimeoutInSecs(90);
     }
 
     @Override
@@ -60,10 +63,14 @@ public class MailTestStories extends JUnitStories {
         viewResources.put("reports", "ftl/jbehave-reports-with-totals.ftl");
         ParameterConverters parameterConverters = new ParameterConverters();
         ExamplesTableFactory examplesTableFactory =
-                new ExamplesTableFactory(new LocalizedKeywords(),
-                        new LoadFromClasspath(embeddableClass), parameterConverters,
-                        new TableTransformers());
-        parameterConverters.addConverters(new DateConverter(
+                new ExamplesTableFactory(
+                        new LocalizedKeywords(),
+                        new LoadFromClasspath(embeddableClass),
+                        parameterConverters,
+                        new ParameterControls(),
+                        new TableTransformers()
+                );
+        parameterConverters.addConverters(new ParameterConverters.DateConverter(
                 new SimpleDateFormat("yyyy-MM-dd")),
                 new ExamplesTableConverter(examplesTableFactory));
         return new MostUsefulConfiguration()
@@ -73,15 +80,17 @@ public class MailTestStories extends JUnitStories {
                         .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
                         .withDefaultFormats()
                         .withViewResources(viewResources)
-                        .withFormats(CONSOLE, TXT, HTML_TEMPLATE, XML_TEMPLATE)
+                        .withFormats(Format.CONSOLE, Format.TXT, Format.HTML)
                         .withFailureTrace(true)
                         .withFailureTraceCompression(true)
-                        .withCrossReference(xref))
+                        .withCrossReference(xref)
+                )
                 .useParameterConverters(parameterConverters)
                 .useStepPatternParser(new RegexPrefixCapturingPatternParser("%"))
                 .useStepMonitor(xref.getStepMonitor())
                 .useStoryReporterBuilder(new StoryReporterBuilder()
-                        .withReporters(new AllureReporter()));
+                        .withReporters(new AllureReporter())
+                );
     }
 
     @Override
@@ -91,7 +100,8 @@ public class MailTestStories extends JUnitStories {
 
     @Override
     protected List<String> storyPaths() {
-        return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()),
-                "**/*.story", "**/excluded*.story");
+        URL codeLocation = codeLocationFromClass(this.getClass());
+        return new StoryFinder().findPaths(codeLocation,
+                "**/*.story", "");
     }
 }
