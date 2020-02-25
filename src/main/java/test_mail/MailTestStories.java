@@ -1,10 +1,5 @@
 package test_mail;
 
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Properties;
-
 import de.codecentric.jbehave.junit.monitoring.JUnitReportingRunner;
 import org.jbehave.core.Embeddable;
 import org.jbehave.core.configuration.Configuration;
@@ -19,7 +14,6 @@ import org.jbehave.core.model.TableTransformers;
 import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
 import org.jbehave.core.parsers.RegexStoryParser;
 import org.jbehave.core.reporters.CrossReference;
-import org.jbehave.core.reporters.Format;
 import org.jbehave.core.reporters.StoryReporterBuilder;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
@@ -29,11 +23,13 @@ import org.jbehave.core.steps.ParameterConverters.ExamplesTableConverter;
 import org.junit.runner.RunWith;
 import test_mail.steps.MailTestSteps;
 
-import static java.util.Arrays.asList;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Properties;
+
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
-import static org.jbehave.core.reporters.Format.HTML_TEMPLATE;
-import static org.jbehave.core.reporters.Format.XML_TEMPLATE;
-import static org.jbehave.core.reporters.StoryReporterBuilder.Format.*;
+import static org.jbehave.core.reporters.Format.*;
 
 /**
  * <p>
@@ -42,7 +38,7 @@ import static org.jbehave.core.reporters.StoryReporterBuilder.Format.*;
  * <p>
  * Stories are specified in classpath and correspondingly the {@link LoadFromClasspath}
  * story loader is configured.
- * </p> 
+ * </p>
  */
 @RunWith(JUnitReportingRunner.class)
 public class MailTestStories extends JUnitStories {
@@ -59,7 +55,7 @@ public class MailTestStories extends JUnitStories {
     public Configuration configuration() {
         Class<? extends Embeddable> embeddableClass = this.getClass();
         Properties viewResources = new Properties();
-        viewResources.put("decorateNonHtml", "true");
+        viewResources.put("decorateNonHtml", "false");
         viewResources.put("reports", "ftl/jbehave-reports-with-totals.ftl");
         ParameterConverters parameterConverters = new ParameterConverters();
         ExamplesTableFactory examplesTableFactory =
@@ -71,7 +67,7 @@ public class MailTestStories extends JUnitStories {
                         new TableTransformers()
                 );
         parameterConverters.addConverters(new ParameterConverters.DateConverter(
-                new SimpleDateFormat("yyyy-MM-dd")),
+                        new SimpleDateFormat("yyyy-MM-dd")),
                 new ExamplesTableConverter(examplesTableFactory));
         return new MostUsefulConfiguration()
                 .useStoryLoader(new LoadFromClasspath(embeddableClass))
@@ -80,7 +76,7 @@ public class MailTestStories extends JUnitStories {
                         .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
                         .withDefaultFormats()
                         .withViewResources(viewResources)
-                        .withFormats(Format.CONSOLE, Format.TXT, Format.HTML)
+                        .withFormats(CONSOLE, TXT, HTML)
                         .withFailureTrace(true)
                         .withFailureTraceCompression(true)
                         .withCrossReference(xref)
